@@ -1,0 +1,9 @@
+@if (isLoggedIn()) {
+  <nav class="container py-3 d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="logout()">
+      Log out
+    </button>
+  </nav>
+}
+
+<router-outlet />

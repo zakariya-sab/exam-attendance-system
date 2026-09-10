@@ -1,0 +1,113 @@
+<main class="container py-4">
+  <h1 class="mb-4">Exam Blocks</h1>
+
+  @if (modulesLoading()) {
+    <p class="text-muted fst-italic mb-4">Loading modules…</p>
+  } @else if (modulesError()) {
+    <p class="alert alert-danger">{{ modulesError() }}</p>
+  } @else {
+    <app-exam-block-form
+      [modules]="modules()"
+      [examBlockToEdit]="examBlockToEdit()"
+      (saved)="onSaved()"
+    />
+  }
+
+  @if (deleteError()) {
+    <p class="alert alert-danger">{{ deleteError() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="text-muted fst-italic">Loading exam blocks…</p>
+  } @else if (error()) {
+    <p class="alert alert-danger">{{ error() }}</p>
+  } @else {
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Session</th>
+            <th>Scheduled time</th>
+            <th>Duration</th>
+            <th>Year</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (examBlock of examBlocks(); track examBlock.id) {
+            <tr>
+              <td>{{ examBlock.moduleName }}</td>
+              <td>{{ examBlock.sessionType }}</td>
+              <td>{{ examBlock.scheduledTime }}</td>
+              <td>{{ examBlock.durationMinutes }} min</td>
+              <td>{{ examBlock.year }}</td>
+              <td>
+                <div class="d-flex gap-2">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="startEdit(examBlock)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteExamBlock(examBlock)"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-secondary"
+                    [disabled]="downloadingBlockId() === examBlock.id"
+                    (click)="downloadAttendance(examBlock)"
+                  >
+                    @if (downloadingBlockId() === examBlock.id) {
+                      Downloading…
+                    } @else {
+                      Download Attendance
+                    }
+                  </button>
+                </div>
+              </td>
+            </tr>
+            @if (deleteConfirmBlockId() === examBlock.id) {
+              <tr>
+                <td colspan="6">
+                  <div class="border rounded p-3 bg-light">
+                    <p class="text-danger small mb-2">{{ deleteConfirmMessage() }}</p>
+                    <div class="d-flex gap-2">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-danger"
+                        (click)="deleteExamBlockForce(examBlock)"
+                      >
+                        Delete anyway
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-secondary"
+                        (click)="cancelDeleteConfirm()"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (downloadErrors()[examBlock.id]) {
+              <tr>
+                <td colspan="6">
+                  <p class="text-danger small mb-0">{{ downloadErrors()[examBlock.id] }}</p>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>

@@ -1,0 +1,20 @@
+﻿spring.application.name=qrattendance
+server.port=8080
+spring.h2.console.enabled=false
+spring.datasource.url=jdbc:h2:mem:Attendance
+
+# Base64-encoded 256-bit AES key used to encrypt the printed QR payload.
+# Generate one with:  openssl rand -base64 32
+qr.encryption.key=REPLACE_ME
+
+spring.autoconfigure.exclude=org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
+
+# Base64-encoded, >=256-bit random secret for HS256 signing.
+# Generate one with:  openssl rand -base64 32
+jwt.secret=REPLACE_ME
+# Token lifetime in milliseconds (8 hours).
+jwt.expiration=28800000
+
+admin.username=REPLACE_ME
+# BCrypt hash of the admin password. Never store the plaintext.
+admin.password-hash=REPLACE_ME
